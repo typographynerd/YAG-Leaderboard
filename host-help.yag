@@ -1,0 +1,19 @@
+**The Hundo/Shiny/Shundo Host Leaderboard**
+
+**Adding/Incrementing Host**
+
+`!host-add <hundo/shiny/shundo> <username/userID>`
+-this will increase username's count by 1
+
+**Editing Leaderboard Entry**
+If you make a mistake, you can set the correct value using these commands
+
+`!host-edit <hundo/shiny/shundo> <username/userID> <new value>`
+
+**Individual Stats**
+You can get the stats of an individual with these commands. If no user is provided, it will give the stats of the user who invoked the command.
+
+`!host-stats <username/userID, optional>`
+
+**Host Command List**
+`!host-help` — brings up this command list

@@ -1,0 +1,82 @@
+{{/*
+			Shiny/Hundo/Shundo Host Leaderboard
+				Trigger: host-add
+				Trigger Type: Command (mention/cmd prefix)
+
+				Require Roles: Bot, RR Mod, RR Leader
+
+				adds/increments total by username
+
+				!host-add <type> <@username or userID>
+					1st argument: hundo/shiny/shundo
+					2nd argument: username/userID
+
+				Settings: set HOF channel, where confirmation messages are sent
+*/}}
+
+{{/* 	Hall of Fame Channel ID (where confirmation message is sent)
+      set this ID to the channel where you want confirmation messages sent*/}}
+
+			{{ $HOFchannel := 879030511752855570 }}
+
+{{/* Set up thumbnail images for confirmation messages*/}}
+      {{ $hundoThumbnail := "https://cdn.discordapp.com/emojis/749800513297449021.png?v=1" }}
+      {{ $shinyThumbnail := "https://cdn.discordapp.com/emojis/747623016829157461.gif?v=1" }}
+      {{ $shundoThumbnail := "https://cdn.discordapp.com/emojis/883800023689732116.gif?v=1" }}
+      {{ $errorThumbnail := "https://cdn.discordapp.com/emojis/642444935093813268.png?v=1" }}
+
+
+{{/* ------------ DO NOT ALTER CODE BELOW ------------ */}}
+
+{{/* Parsing and checking  command arguments */}}
+{{$args := parseArgs 2 "Syntax is *<hundo, shiny, shundo> <@user/userID>*"
+	(carg "string" "choose from hundo, shiny or shundo")
+	(carg "userid" "user who hosted raid")}}
+
+{{/* Setting up variables from  command arguments */}}
+	{{ $type := lower ($args.Get 0)}} {{/* Convert first argument to lower case and set variable*/}}
+	{{ $userID := ($args.Get 1)}} {{/* set 2nd argument as user variable */}}
+	{{ $user := (userArg $userID)}}
+	{{ $mention := $user.Mention}} {{/* Make user into mention */}}
+
+{{/* Checking $type variable for correct command */}}
+{{ if eq $type "hundo"}}
+	{{$v := dbIncr $userID $type 1}} {{/* increments data element by 1*/}}
+	{{$hundoCount := ((dbGet $userID "hundo").Value)}}
+	{{ $embed := cembed
+	     "title" "Another Hundo Hosted"
+       "description" (println $mention "hosted a raid here and gave out a Hundo!\n Total Hundos hosted to date is" $hundoCount)
+       "thumbnail" (sdict "url" $hundoThumbnail )
+	      "color" 4645612
+	 }}
+	{{ sendMessage $HOFchannel $embed }}
+{{ else if eq $type "shiny"}}
+	{{$v := dbIncr $userID $type 1}} {{/* increments data element by 1*/}}
+	{{$shinyCount := ((dbGet $userID "shiny").Value)}}
+	{{ $embed := cembed
+	     "title" "Another Shiny Hosted"
+       "description" (println $mention "hosted a raid here and gave out a Shiny!\n Total Shinies hosted to date is" $shinyCount)
+       "thumbnail" (sdict "url" $shinyThumbnail )
+	     "color" 4645612
+	 }}
+	{{ sendMessage $HOFchannel $embed }}
+{{ else if eq $type "shundo"}}
+	{{$v := dbIncr $userID $type 1}} {{/* increments data element by 1*/}}
+	{{$shundoCount := ((dbGet $userID "shundo").Value)}}
+	{{ $embed := cembed
+	     "title" "Another Shundo Hosted"
+       "description" (println $mention "hosted a raid here and gave out a Shundo!\n Total Shundos hosted to date is" $shundoCount)
+       "thumbnail" (sdict "url" $shundoThumbnail )
+	     "color" 4645612
+	 }}
+	{{ sendMessage $HOFchannel $embed }}
+
+{{ else }}
+	{{ $embed := cembed
+	     "title" "Error Detected: invalid option."
+       "description" "The options are:  \n- hundo \n- shiny \n- shundo"
+       "thumbnail" (sdict "url" $errorThumbnail )
+	     "color" 4645612
+	 }}
+	{{ sendMessage nil $embed }}
+{{end}}

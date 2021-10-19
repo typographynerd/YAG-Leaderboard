@@ -1,0 +1,87 @@
+{{/*
+			Shiny/Hundo/Shundo Host Leaderboard
+				Trigger: host-edit
+				Trigger Type: Command (mention/cmd prefix)
+
+				Require Roles: Bot, RR Mod
+
+				Edits user's entries in database
+
+				!host-edit <type> <@username/userID> <new value>
+					1st argument: hundo/shiny/shundo
+					2nd argument: @username/userID
+					3rd argument: new value
+
+          This edits the database entry for a given user and type
+          It will change the value to the number you indicate
+
+          Confirmation messages are sent to the channel where command is used
+          Expecting it to be used in a private channel by moderators/admins
+
+*/}}
+
+{{/* Set up thumbnail images for confirmation messages*/}}
+      {{ $hundoThumbnail := "https://cdn.discordapp.com/emojis/749800513297449021.png?v=1" }}
+      {{ $shinyThumbnail := "https://cdn.discordapp.com/emojis/747623016829157461.gif?v=1" }}
+      {{ $shundoThumbnail := "https://cdn.discordapp.com/emojis/883800023689732116.gif?v=1" }}
+      {{ $errorThumbnail := "https://cdn.discordapp.com/emojis/642444935093813268.png?v=1" }}
+
+{{/* ------------ DO NOT ALTER CODE BELOW ------------ */}}
+
+
+{{/* Parsing and checking  command arguments */}}
+{{$args := parseArgs 3 "Syntax is *<hundo, shiny, shundo> <@user/userID> <new value>* "
+	(carg "string" "choose from hundo, shiny or shundo")
+	(carg "userid" "user value to edit ")
+	(carg "int" "new value")}}
+
+{{/* Setting up variables from  command arguments */}}
+	{{ $type := lower ($args.Get 0)}} {{/* Convert first argument to lower case and set variable*/}}
+	{{ $userID := ($args.Get 1)}} {{/* set 2nd argument as user variable */}}
+	{{ $newEntry := ($args.Get 2)}} {{/* set 3rd argument as new entry variable */}}
+	{{ $user := (userArg $userID)}} {{/* gets user from ID */}}
+	{{ $mention := $user.Mention}} {{/* Make user into mention */}}
+
+{{/* Checking $type variable for correct command */}}
+{{ if eq $type "hundo"}}
+	{{ $v := dbSet $userID $type $newEntry}} {{/* sets Hundo entry by indicated amount*/}}
+	{{ $hundoCount := ((dbGet $userID "hundo").Value) }}
+	{{ $embed := cembed
+	     "title" "Hundo Hosted Edited"
+       "description" (println "The Hundo Hosts for" $mention "has been edited. \n Total Hundos hosted to date is now" $hundoCount)
+    	 "thumbnail" (sdict "url" $hundoThumbnail )
+	     "color" 4645612
+	 }}
+	{{ sendMessage nil $embed }}
+
+{{ else if eq $type "shiny"}}
+	{{$v := dbSet $userID $type $newEntry}} {{/* sets Shiny entry by indicated amount*/}}
+	{{ $shinyCount := ((dbGet $userID "shiny").Value) }}
+	{{ $embed := cembed
+	     "title" "Shiny Hosted Edited"
+       "description" (println "The Shiny Hosts for" $mention "has been edited. \n Total Shinies hosted to date is now" $shinyCount)
+    	 "thumbnail" (sdict "url" $shinyThumbnail )
+	     "color" 4645612
+	 }}
+	{{ sendMessage nil $embed }}
+
+{{ else if eq $type "shundo"}}
+	{{ $v := dbSet $userID $type $newEntry}} {{/* sets Shundo entry by indicated amount*/}}
+	{{$shundoCount := ((dbGet $userID "shundo").Value)}}
+	{{ $embed := cembed
+	     "title" "Shundo Hosted Edited"
+       "description" (println "The Shundo Hosts for" $mention "has been edited. \n Total Shundos hosted to date is now" $shundoCount)
+    	 "thumbnail" (sdict "url" $shundoThumbnail )
+	     "color" 4645612
+	 }}
+	{{ sendMessage nil $embed }}
+
+{{ else }}
+	{{ $embed := cembed
+	     "title" "Error Detected: invalid option." 
+       "description" "The options are:  \n- hundo \n- shiny \n- shundo"
+    	 "thumbnail" (sdict "url" $errorThumbnail )
+	     "color" 4645612
+	 }}
+	{{ sendMessage nil $embed }}
+{{end}}

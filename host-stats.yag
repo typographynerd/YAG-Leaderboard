@@ -1,0 +1,45 @@
+{{/*
+      Shiny/Hundo/Shundo Host Leaderboard
+        Trigger: host-stats
+        Trigger Type: Command (mention/cmd prefix)
+        Require Roles: Bot, RR Mod, RR Leader, RR Member (all verified members)
+        Restrict to Channels: #hall-of-fame
+
+	      Displays individual user's stats
+
+	      !host-stats <username, optional>
+          1st argument: username (optional)
+          if no username given, will display stats of user who issued command
+*/}}
+
+{{/* Set up emojis for stats message */}}
+      {{ $hundoEmoji := "<:hostHundo:895253400336343060>" }}
+      {{ $shinyEmoji := "<a:anHostShinies:893925605043744898>" }}
+      {{ $shundoEmoji := "<a:anHostShundo:896949404194467850>" }}
+      {{ $hostThumbnail := "https://cdn.discordapp.com/attachments/879030511752855567/893976505368068096/RedTicket.png" }}
+
+
+{{/* ------------ DO NOT ALTER CODE BELOW ------------ */}}
+
+{{$user := .User}} {{/* sets user variable as person who issued command */}}
+{{$userID :=  $user.ID}}
+{{$userMention := $user.Mention}}
+
+{{ $args := parseArgs 0 "Optional Username" (carg "userid" "target user") }}
+{{ if $args.IsSet 0 }}
+	  {{$userID =  ($args.Get 0)}} {{/* Get UserID from username; to be used as ID for db get */}}
+    {{$user = (userArg $userID)}}
+	  {{$userMention = $user.Mention}}
+{{ end }}
+
+  {{$hundoCount := ((dbGet $userID "hundo").Value)}}
+	{{$shinyCount := ((dbGet $userID "shiny").Value)}}
+	{{$shundoCount := ((dbGet $userID "shundo").Value)}}
+
+{{ $embed := cembed
+	   "title" "User Hosting Statistics"
+     "description" (println "Here are the hosting stats for" $userMention "\n " $hundoEmoji " Hundos:" $hundoCount "\n " $shinyEmoji " Shinies: " $shinyCount "\n " $shundoEmoji " Shundos: " $shundoCount)
+     "thumbnail" (sdict "url" $hostThumbnail )
+	    "color" 4645612
+	 }}
+  {{ sendMessage nil $embed }}
