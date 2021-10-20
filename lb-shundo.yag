@@ -1,0 +1,63 @@
+{{/*
+      Shiny/Hundo/Shundo Host Leaderboard
+	     Trigger: lb-shundo
+	     Trigger Type: Command (mention/cmd prefix)
+
+	     Require Roles: Bot, RR Mod, RR Leader, RR Member (all verified)
+       Limit to #hall-of-fame
+
+	     Generates shundo leaderboard
+	      !lb-shundo <list length-number, optional>
+        1st argument (optional): list length (number)
+        if no argument is provided, default length used (defined below)
+*/}}
+
+{{/* Sets default list length—change to what you want the default to be */}}
+    {{$listNumber := 10}} {{/* Sets default list length to 10 */}}
+
+{{/* Set up emojis for stats message */}}
+    {{ $shundoEmoji := "<a:anHostShundo:896949404194467850>" }}
+
+{{/* Set up message fields */}}
+    {{ $lbTitle := "Shundo Host Leaderboard" }}
+    {{ $lbDescription := "These are the top hosts giving out shundos." }}
+    {{ $textFooter := "Statistics since September 1, 2021" }}
+    {{ $iconFooter := "https://cdn.discordapp.com/emojis/734611758207074406.png" }}
+
+{{/* ------------ DO NOT ALTER CODE BELOW ------------ */}}
+
+{{/* Parsing and checking  command arguments */}}
+{{$args := parseArgs 0 "Optional List Length" (carg "int" "list length")}}
+{{ if $args.IsSet 0 }}
+    {{$listNumber = ($args.Get 0) }}
+{{ end }}
+
+{{/* Setting up Shiny Leaderboard List */}}
+{{$listShundo := ""}}  {{$c := 0}}
+{{range (dbTopEntries "shundo" $listNumber 0)}}{{$c = add $c 1}}{{$h := toInt (dbGet .User.ID "shundo").Value}}
+      {{ if gt $h 0}}
+        {{ if eq $c 1}}
+          {{$listShundo = print $listShundo "🥇 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+        {{ else if eq $c 2}}
+          {{$listShundo = print $listShundo "🥈 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+        {{ else if eq $c 3}}
+          {{$listShundo = print $listShundo "🥉 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+        {{ else }}
+          {{$listShundo = print $listShundo "🏅 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+        {{ end }}
+      {{ end }}
+{{end}}
+
+{{/* Printing Out Leaderboard Lists */}}
+{{/* Shundo Leaderboard */}}
+
+{{$embed := cembed
+    "title" $lbTitle
+    "description" $lbDescription
+    "color" 4645612
+    "footer" (sdict "text" $textFooter "icon_url" $iconFooter)
+    "fields" (cslice
+        (sdict "name" (println "Shundo Hosts " $shundoEmoji ) "value" $listShundo "inline" false)
+  )
+}}
+{{ sendMessage nil $embed }}

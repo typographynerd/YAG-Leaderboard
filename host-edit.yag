@@ -28,7 +28,6 @@
 
 {{/* ------------ DO NOT ALTER CODE BELOW ------------ */}}
 
-
 {{/* Parsing and checking  command arguments */}}
 {{$args := parseArgs 3 "Syntax is *<hundo, shiny, shundo> <@user/userID> <new value>* "
 	(carg "string" "choose from hundo, shiny or shundo")
@@ -78,7 +77,7 @@
 
 {{ else }}
 	{{ $embed := cembed
-	     "title" "Error Detected: invalid option." 
+	     "title" "Error Detected: invalid option."
        "description" "The options are:  \n- hundo \n- shiny \n- shundo"
     	 "thumbnail" (sdict "url" $errorThumbnail )
 	     "color" 4645612

@@ -1,0 +1,62 @@
+{{/*
+      Shiny/Hundo/Shundo Host Leaderboard
+	     Trigger: lb-shiny
+	     Trigger Type: Command (mention/cmd prefix)
+
+	     Require Roles: Bot, RR Mod, RR Leader, RR Member (all verified)
+
+	     Generates shiny leaderboard
+	      !lb-shiny <list length-number>
+        1st argument (optional): list length (number)
+        if no argument is provided, default length used (defined below)
+*/}}
+
+{{/* Sets default list length—change to what you want the default to be */}}
+    {{$listNumber := 10}}
+
+{{/* Set up emojis for stats message */}}
+    {{ $shinyEmoji := "<a:anHostShinies:893925605043744898>" }}
+
+{{/* Set up message fields */}}
+    {{ $lbTitle := "Shiny Host Leaderboard" }}
+    {{ $lbDescription := "These are the top hosts giving out shinies." }}
+    {{ $textFooter := "Statistics since September 1, 2021" }}
+    {{ $iconFooter := "https://cdn.discordapp.com/emojis/734611758207074406.png" }}
+
+{{/* ------------ DO NOT ALTER CODE BELOW ------------ */}}
+
+{{/* Parsing and checking  command arguments */}}
+  {{$args := parseArgs 0 "Optional List Length" (carg "int" "list length")}}
+    {{ if $args.IsSet 0 }}
+      {{$listNumber = ($args.Get 0) }}
+    {{ end }}
+
+{{/* Setting up Shiny Leaderboard List */}}
+  {{$listShiny := ""}}  {{$c := 0}}
+  {{range (dbTopEntries "shiny" $listNumber 0)}}{{$c = add $c 1}}{{$h := toInt (dbGet .User.ID "shiny").Value}}
+    {{ if gt $h 0}}
+      {{ if eq $c 1}}
+        {{$listShiny = print $listShiny "🥇 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+      {{ else if eq $c 2}}
+        {{$listShiny = print $listShiny "🥈 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+      {{ else if eq $c 3}}
+        {{$listShiny = print $listShiny "🥉 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+      {{ else }}
+        {{$listShiny = print $listShiny "🏅 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+      {{ end }}
+    {{ end }}
+  {{end}}
+
+{{/* Printing Out Leaderboard Lists */}}
+{{/* Shiny Leaderboard */}}
+
+{{$embed := cembed
+    "title" $lbTitle
+    "description" $lbDescription
+    "color" 4645612
+    "footer" (sdict "text" $textFooter "icon_url" $iconFooter)
+    "fields" (cslice
+        (sdict "name" (println "Shiny Hosts " $shinyEmoji ) "value" $listShiny "inline" false)
+    )
+}}
+{{ sendMessage nil $embed }}

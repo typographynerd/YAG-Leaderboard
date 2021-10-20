@@ -1,0 +1,148 @@
+{{/*
+			Adding Host Entry by Reactions
+			Trigger: reaction
+			Required Roles: set to roles who can grant
+			Limit to #show-off channel
+
+			version 2.0
+			-now counts host emojis, in case Mod/Leader adds additional reactions and
+			won't add additional points to database
+      
+*/}}
+
+{{/* Set Emoji IDs that trigger this script */}}
+	{{ $hundoEmoji := 895253400336343060 }}
+	{{ $shinyEmoji := 896445299684425728 }}
+	{{ $shundoEmoji := 896445563770372116 }}
+
+{{/* Checkmark emoji that is added after host reaction added */}}
+	{{ $checkEmoji := ":hostCheck:896481862455812157"}}
+
+{{/* UserID of YAG in your server */}}
+	{{ $YAGid := 204255221017214977 }}
+
+{{/* Embed Message Images */}}
+	{{ $hundoImageURL := "https://cdn.discordapp.com/emojis/749800513297449021.png?v=1" }}
+	{{ $shinyImageURL := "https://cdn.discordapp.com/emojis/747623016829157461.gif?v=1" }}
+	{{ $shundoImageURL := "https://cdn.discordapp.com/emojis/883800023689732116.gif?v=1" }}
+
+{{/* 	Hall of Fame Channel ID (where message is sent) */}}
+			{{ $HOFchannel := 879030511752855570 }}
+
+{{/* Set #show-off channel ID */}}
+			{{ $channelID := 879030511752855569 }}
+
+{{/* ------------ DO NOT ALTER CODE BELOW ------------ */}}
+
+{{/* Set variables from reaction message */}}
+		{{ $emojiReaction := .Reaction.Emoji.ID }}
+		{{ $emojiReactionName := .Reaction.Emoji.APIName }}
+		{{ $userID := .Reaction.UserID }}
+		{{ $messageID := .Reaction.MessageID }}
+    {{ $emoji := .Reaction.Emoji.ID }}
+
+{{/* Declare count variables  */}}
+	{{$hundoEmojiCount := 0}}
+	{{$shinyEmojiCount := 0}}
+	{{$shundoEmojiCount := 0}}
+
+{{range .ReactionMessage.Reactions}}
+	{{/* If emote names matches the emote we are tracking */}}
+		{{if eq .Emoji.ID $hundoEmoji}}
+			{{/* Update count with the count of the emote */}}
+			{{$hundoEmojiCount = .Count}}
+		{{else if eq .Emoji.ID $shinyEmoji}}
+			{{$shinyEmojiCount = .Count}}
+		{{else if eq .Emoji.ID $shundoEmoji}}
+			{{$shundoEmojiCount = .Count}}
+		{{end}}
+{{end}}
+
+{{ if gt (len .ReactionMessage.Mentions) 0 }}
+	{{ $mentions := .ReactionMessage.Mentions}}
+	{{ $userID := (index $mentions 0).ID }}
+	{{ $user := (userArg $userID)}}
+	{{ $mention := $user.Mention}} {{/* Make user into mention */}}
+
+{{/* Checking $type variable for correct command */}}
+{{if eq $emoji $hundoEmoji }}
+	{{if .ReactionAdded }}
+				{{if eq $hundoEmojiCount 1}}
+					{{$v := dbIncr $userID "hundo" 1}} {{/* increments data element by 1*/}}
+					{{addReactions $checkEmoji}}
+					{{$hundoCount := ((dbGet $userID "hundo").Value)}}
+					{{ $embed := cembed
+	 					"title" "Another Hundo Hosted" "description" (println $mention "hosted a raid here and gave out a Hundo!\n Total Hundos hosted to date is" $hundoCount)
+    				"thumbnail" (sdict "url" $hundoImageURL)
+						"color" 4645612
+	 				}}
+					{{ sendMessage $HOFchannel $embed }}
+				{{end}}
+	{{else}}
+		{{if eq $hundoEmojiCount 0}}
+			{{$v := dbIncr $userID "hundo" -1}} {{/* decreases data element by 1*/}}
+			{{deleteMessageReaction $channelID $messageID $YAGid $checkEmoji}}
+			{{$hundoCount := ((dbGet $userID "hundo").Value)}}
+			{{ $embed := cembed
+	 			"title" "Removed Hundo Hosted" "description" (println "A hundo host has been removed from" $mention "\n Total Hundos hosted to date is now" $hundoCount)
+    		"thumbnail" (sdict "url" $hundoImageURL)
+				"color" 4645612
+	 		}}
+			{{ sendMessage $HOFchannel $embed }}
+			{{end}}
+		{{end}}
+
+{{else if eq $emoji $shinyEmoji }}
+	{{if .ReactionAdded }}
+		{{if eq $shinyEmojiCount 1}}
+			{{$v := dbIncr $userID "shiny" 1}} {{/* increments data element by 1*/}}
+			{{addReactions $checkEmoji}}
+			{{$shinyCount := ((dbGet $userID "shiny").Value)}}
+			{{ $embed := cembed
+	 			"title" "Another Shiny Hosted" "description" (println $mention "hosted a raid here and gave out a Shiny!\n Total Shinies hosted to date is" $shinyCount)
+    		"thumbnail" (sdict "url" $shinyImageURL)
+				"color" 4645612
+	 		}}
+			{{sendMessage $HOFchannel $embed}}
+		{{end}}
+	{{else}}
+		{{if eq $shinyEmojiCount 0}}
+			{{$v := dbIncr $userID "shiny" -1}} {{/* decreases data element by 1*/}}
+			{{deleteMessageReaction nil $messageID $YAGid $checkEmoji}}
+			{{$shinyCount := ((dbGet $userID "shiny").Value)}}
+			{{ $embed := cembed
+	 			"title" "Removed Shiny Hosted" "description" (println "A shiny host has been removed from" $mention "\n Total Shinies hosted to date is now" $shinyCount)
+    		"thumbnail" (sdict "url" $shinyImageURL)
+				"color" 4645612
+	 		}}
+			{{ sendMessage $HOFchannel $embed }}
+		{{end}}
+	{{end}}
+{{else if eq $emoji $shundoEmoji }}
+	{{if .ReactionAdded }}
+		{{if eq $shundoEmojiCount 1}}
+			{{$v := dbIncr $userID "shundo" 1}} {{/* increments data element by 1*/}}
+			{{addReactions $checkEmoji}}
+			{{$shundoCount := ((dbGet $userID "shundo").Value)}}
+			{{ $embed := cembed
+	 			"title" "Another Shundo Hosted" "description" (println $mention "hosted a raid here and gave out a Shundo!\n Total Shundos hosted to date is" $shundoCount)
+    		"thumbnail" (sdict "url" $shundoImageURL)
+				"color" 4645612
+	 		}}
+			{{ sendMessage $HOFchannel $embed }}
+		{{end}}
+	{{else}}
+		{{if eq $shundoEmojiCount 0}}
+			{{$v := dbIncr $userID "shundo" -1}} {{/* decreases data element by 1*/}}
+			{{deleteMessageReaction nil $messageID $YAGid $checkEmoji }}
+			{{$shundoCount := ((dbGet $userID "shundo").Value)}}
+			{{ $embed := cembed
+	 			"title" "Removed Shundo Hosted" "description" (println "A shundo host has been removed from" $mention "\n Total Shundos hosted to date is now" $shundoCount)
+    		"thumbnail" (sdict "url" $shundoImageURL)
+				"color" 4645612
+	 		}}
+			{{ sendMessage $HOFchannel $embed }}
+		{{end}}
+{{end}}
+{{end}}
+{{end}}

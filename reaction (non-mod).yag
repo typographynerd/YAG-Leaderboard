@@ -1,0 +1,39 @@
+{{/*
+      Remove HostReactions by non-management
+	    Trigger: reaction
+	    Set to ignore the roles who can grant (or they get removed!)
+	    Limit to #show-off channel
+
+			This script removes host reactions added by anyone not authorized to
+			add to Leaderboard. It is optional but can help your mod team to know
+			whether an entry has already been added.
+
+*/}}
+
+{{/* Set #show-off channel ID */}}
+	{{ $channelID := 879030511752855569 }}
+
+{{/* set Host emojis to be removed if non management */}}
+	{{ $hundoEmoji := 895253400336343060 }}
+	{{ $shinyEmoji := 896445299684425728 }}
+	{{ $shundoEmoji := 896445563770372116 }}
+
+{{/* ------------ DO NOT ALTER CODE BELOW ------------ */}}
+
+{{/* Set variables from reaction message */}}
+  {{ $emojiReaction := .Reaction.Emoji.ID }}
+  {{ $emojiReactionName := .Reaction.Emoji.APIName }}
+  {{ $userID := .Reaction.UserID }}
+  {{ $messageID := .Reaction.MessageID }}
+
+{{/* if reaction is any of the host emojis, delete reaction */}}
+
+	{{ if eq $emojiReaction $hundoEmoji}}
+		{{ deleteMessageReaction $channelID $messageID $userID $emojiReactionName }}
+
+	{{ else if eq $emojiReaction $shinyEmoji}}
+		{{ deleteMessageReaction $channelID $messageID $userID $emojiReactionName }}
+
+	{{ else if eq $emojiReaction $shundoEmoji}}
+		{{ deleteMessageReaction $channelID $messageID $userID $emojiReactionName }}
+	{{ end }}

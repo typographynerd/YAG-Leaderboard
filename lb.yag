@@ -1,0 +1,90 @@
+{{/*
+      Shiny/Hundo/Shundo Host Leaderboard
+        Trigger: lb
+	      Trigger Type: Command (mention/cmd prefix)
+
+	      Require Roles: Bot, RR Mod, RR Leader, RR Member (all verified)
+        Limit to #hall-of-fame
+
+        Lists top 10 in all 3 leaderboards
+
+        NOTE: This command requires YAG Premium as there are three dBTopEntries calls
+        and the free YAG is limited to two.
+
+        !lb
+*/}}
+
+
+{{/* Set up emojis for stats message */}}
+      {{ $hundoEmoji := "<:hostHundo:895253400336343060>" }}
+      {{ $shinyEmoji := "<a:anHostShinies:893925605043744898>" }}
+      {{ $shundoEmoji := "<a:anHostShundo:896949404194467850>" }}
+
+{{/* Set up message fields */}}
+      {{ $lbTitle := "Host Leaderboard" }}
+      {{ $lbDescription := "These are the top 10 hosts giving out hundos, shinies and shundos." }}
+      {{ $textFooter := "Statistics since September 1, 2021" }}
+      {{ $iconFooter := "https://cdn.discordapp.com/emojis/734611758207074406.png" }}
+
+{{/* Set up leaderboard entries */}}
+
+{{$listHundo := ""}}  {{$c := 0}}
+{{range (dbTopEntries "hundo" 10 0)}}{{$c = add $c 1}}{{$h := toInt (dbGet .User.ID "hundo").Value}}
+    {{ if gt $h 0}}
+      {{ if eq $c 1}}
+        {{$listHundo = print $listHundo "🥇 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+      {{ else if eq $c 2}}
+        {{$listHundo = print $listHundo "🥈 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+      {{ else if eq $c 3}}
+        {{$listHundo = print $listHundo "🥉 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+      {{ else }}
+        {{$listHundo = print $listHundo "🏅 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+      {{ end }}
+    {{ end }}
+{{end}}
+
+{{$listShiny := ""}}  {{$c := 0}}
+{{range (dbTopEntries "shiny" 10 0)}}{{$c = add $c 1}}{{$h := toInt (dbGet .User.ID "shiny").Value}}
+  {{ if gt $h 0}}
+    {{ if eq $c 1}}
+      {{$listShiny = print $listShiny "🥇 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+    {{ else if eq $c 2}}
+      {{$listShiny = print $listShiny "🥈 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+    {{ else if eq $c 3}}
+      {{$listShiny = print $listShiny "🥉 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+    {{ else }}
+      {{$listShiny = print $listShiny "🏅 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+    {{ end }}
+  {{ end }}
+{{end}}
+
+{{$listShundo := ""}}  {{$c := 0}}
+{{range (dbTopEntries "shundo" 10 0)}}{{$c = add $c 1}}{{$h := toInt (dbGet .User.ID "shundo").Value}}
+    {{ if gt $h 0}}
+      {{ if eq $c 1}}
+        {{$listShundo = print $listShundo "🥇 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+      {{ else if eq $c 2}}
+        {{$listShundo = print $listShundo "🥈 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+      {{ else if eq $c 3}}
+        {{$listShundo = print $listShundo "🥉 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+      {{ else }}
+        {{$listShundo = print $listShundo "🏅 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+      {{ end }}
+    {{ end }}
+{{end}}
+
+{{/* Create embed message */}}
+{{$embed := cembed
+    "title" $lbTitle
+    "description" $lbDescription
+    "color" 4645612
+    "footer" (sdict "text" $textFooter "icon_url" $iconFooter )
+    "fields" (cslice
+      (sdict "name" (println "<:blank:820976429172391977>\n**Hundo Hosts** " $hundoEmoji) "value" $listHundo "inline" true)
+      (sdict "name" (println "<:blank:820976429172391977>\n**Shiny Hosts** " $shinyEmoji) "value" $listShiny "inline" true)
+      (sdict "name" (println "<:blank:820976429172391977>\n**Shundo Hosts** " $shundoEmoji) "value" $listShundo "inline" true)
+    )
+}}
+
+{{/* Send embed message */}}
+{{ sendMessage nil $embed }}

@@ -1,0 +1,19 @@
+**The Hundo/Shiny/Shundo Host Leaderboard**
+
+**Listing Leaderboards**
+There are 4 options for listing leaderboards.
+
+`!lb`
+-This lists top 10 hosts in all three categories
+
+`!lb-hundo <number, optional>`
+-List top hundo hosts, to max of 100
+
+`!lb-shiny <number, optional>`
+-List top shiny hosts, to max of 100
+
+`!lb-shundo <number, optional>`
+-List top shundo hosts, to max of 100
+
+**Leaderboard Command List**
+`!lb-help` — brings up this command list

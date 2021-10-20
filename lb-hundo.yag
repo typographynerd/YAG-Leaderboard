@@ -1,0 +1,64 @@
+{{/*
+      Shiny/Hundo/Shundo Host Leaderboard
+        Trigger: lb-hundo
+	      Trigger Type: Command (mention/cmd prefix)
+
+	      Require Roles: Bot, RR Mod, RR Leader, RR Member (all verified)
+        Limit to #hall-of-fame
+
+	      Generates hundo leaderboard
+	       !lb-hundo <list length-number>
+         1st argument (optional): list length (number)
+         if no argument is provided, default length used (defined below)
+*/}}
+
+{{/* Sets default list length—change to what you want the default to be */}}
+    {{$listNumber := 10}}
+
+{{/* Set up emojis for stats message */}}
+    {{ $hundoEmoji := "<:hostHundo:895253400336343060>" }}
+
+{{/* Set up message fields */}}
+    {{ $lbTitle := "Hundo Host Leaderboard" }}
+    {{ $lbDescription := "These are the top hosts giving out hundos." }}
+    {{ $textFooter := "Statistics since September 1, 2021" }}
+    {{ $iconFooter := "https://cdn.discordapp.com/emojis/734611758207074406.png" }}
+
+
+{{/* ------------ DO NOT ALTER CODE BELOW ------------ */}}
+
+{{/* Parsing and checking  command arguments */}}
+{{$args := parseArgs 0 "Optional List Length" (carg "int" "list length")}}
+  {{ if $args.IsSet 0 }}
+    {{$listNumber = ($args.Get 0) }}
+  {{ end }}
+
+{{/* Setting up Leaderboard Lists */}}
+  {{$listHundo := ""}} {{$c := 0}}
+  {{range (dbTopEntries "hundo" $listNumber 0)}} {{$c = add $c 1}} {{$h := toInt (dbGet .User.ID "hundo").Value}}
+    {{ if gt $h 0}}
+      {{ if eq $c 1}}
+        {{$listHundo = print $listHundo "🥇 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+      {{ else if eq $c 2}}
+        {{$listHundo = print $listHundo "🥈 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+      {{ else if eq $c 3}}
+        {{$listHundo = print $listHundo "🥉 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+      {{ else }}
+        {{$listHundo = print $listHundo "🏅 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+
+{{/* Printing Out Leaderboard Lists */}}
+{{/* Hundo Leaderboard */}}
+
+  {{$embed := cembed
+    "title" $lbTitle
+    "description" $lbDescription
+    "color" 4645612
+    "footer" (sdict "text" $textFooter "icon_url" $iconFooter )
+    "fields" (cslice
+        (sdict "name" (println "Hundo Hosts " $hundoEmoji ) "value" $listHundo "inline" false)
+    )
+  }}
+  {{ sendMessage nil $embed }}
