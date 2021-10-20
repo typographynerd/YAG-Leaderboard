@@ -15,7 +15,7 @@
 */}}
 
 {{/* 	Hall of Fame Channel ID (where confirmation message is sent)
-      set this ID to the channel where you want confirmation messages sent*/}}
+      set this ID to the channel where you want confirmation messages sent */}}
 
 			{{ $HOFchannel := 879030511752855570 }}
 

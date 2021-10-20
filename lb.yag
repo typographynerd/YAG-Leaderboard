@@ -26,8 +26,9 @@
       {{ $textFooter := "Statistics since September 1, 2021" }}
       {{ $iconFooter := "https://cdn.discordapp.com/emojis/734611758207074406.png" }}
 
-{{/* Set up leaderboard entries */}}
+{{/* ------------ DO NOT ALTER CODE BELOW ------------ */}}
 
+{{/* Set up leaderboard entries */}}
 {{$listHundo := ""}}  {{$c := 0}}
 {{range (dbTopEntries "hundo" 10 0)}}{{$c = add $c 1}}{{$h := toInt (dbGet .User.ID "hundo").Value}}
     {{ if gt $h 0}}

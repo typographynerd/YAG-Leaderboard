@@ -27,10 +27,10 @@
 	{{ $shundoImageURL := "https://cdn.discordapp.com/emojis/883800023689732116.gif?v=1" }}
 
 {{/* 	Hall of Fame Channel ID (where message is sent) */}}
-			{{ $HOFchannel := 879030511752855570 }}
+	{{ $HOFchannel := 879030511752855570 }}
 
 {{/* Set #show-off channel ID */}}
-			{{ $channelID := 879030511752855569 }}
+	{{ $channelID := 879030511752855569 }}
 
 {{/* ------------ DO NOT ALTER CODE BELOW ------------ */}}
 
