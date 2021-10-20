@@ -9,6 +9,7 @@ This was developed for the specific use of our server and relies on some of the 
 You will need to have some understanding of YAG's Custom Commands feature in the Control Panel. If you are not familiar, it will be helpful to read about it [here](https://docs.yagpdb.xyz/commands/custom-commands).
 
 Each .yag file in the repository is an individual custom command. You will need to copy/past the code of each file into the "response" section of the custom command. You will need to set the correct trigger for it to function correctly.
+
 ![YAG Custom Commands](https://i.imgur.com/qCrqGeX.png)
 ![YAG Custom Commands—Reaction Trigger](https://i.imgur.com/vcTWab3.png)
 
