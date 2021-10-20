@@ -1,13 +1,13 @@
 {{/*
 			Adding Host Entry by Reactions
 			Trigger: reaction
-			Required Roles: set to roles who can grant
-			Limit to #show-off channel
+			Required Roles: set to roles who can grant (mods)
+			Limit to channel where screenshots are posted (#show-off)
 
 			version 2.0
 			-now counts host emojis, in case Mod/Leader adds additional reactions and
 			won't add additional points to database
-      
+
 */}}
 
 {{/* Set Emoji IDs that trigger this script */}}

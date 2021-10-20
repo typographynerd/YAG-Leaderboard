@@ -3,7 +3,7 @@
 				Trigger: host-edit
 				Trigger Type: Command (mention/cmd prefix)
 
-				Require Roles: Bot, RR Mod
+				Require Roles: roles who will edit entries
 
 				Edits user's entries in database
 

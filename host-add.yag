@@ -3,7 +3,7 @@
 				Trigger: host-add
 				Trigger Type: Command (mention/cmd prefix)
 
-				Require Roles: Bot, RR Mod, RR Leader
+				Require Roles: roles who will add entries to leaderboard
 
 				adds/increments total by username
 
@@ -11,7 +11,7 @@
 					1st argument: hundo/shiny/shundo
 					2nd argument: username/userID
 
-				Settings: set HOF channel, where confirmation messages are sent
+				Settings: set hall of fame channel, where confirmation messages are sent
 */}}
 
 {{/* 	Hall of Fame Channel ID (where confirmation message is sent)

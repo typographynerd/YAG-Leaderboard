@@ -3,8 +3,8 @@
 	     Trigger: lb-shundo
 	     Trigger Type: Command (mention/cmd prefix)
 
-	     Require Roles: Bot, RR Mod, RR Leader, RR Member (all verified)
-       Limit to #hall-of-fame
+       Require Roles: any/all roles who can display leaderboard
+       Restrict to specific channel(s) if desired
 
 	     Generates shundo leaderboard
 	      !lb-shundo <list length-number, optional>

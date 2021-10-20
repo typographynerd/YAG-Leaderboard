@@ -2,7 +2,7 @@
       Remove HostReactions by non-management
 	    Trigger: reaction
 	    Set to ignore the roles who can grant (or they get removed!)
-	    Limit to #show-off channel
+			Limit to channel where screenshots are posted (#show-off)
 
 			This script removes host reactions added by anyone not authorized to
 			add to Leaderboard. It is optional but can help your mod team to know

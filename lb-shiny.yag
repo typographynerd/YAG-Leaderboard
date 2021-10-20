@@ -3,7 +3,8 @@
 	     Trigger: lb-shiny
 	     Trigger Type: Command (mention/cmd prefix)
 
-	     Require Roles: Bot, RR Mod, RR Leader, RR Member (all verified)
+       Require Roles: any/all roles who can display leaderboard
+       Restrict to specific channel(s) if desired
 
 	     Generates shiny leaderboard
 	      !lb-shiny <list length-number>

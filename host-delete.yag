@@ -3,7 +3,7 @@
 				Trigger: host-delete
 				Trigger Type: Command (mention/cmd prefix)
 
-				Require Roles: Bot, RR Mod
+				Require Roles: roles who will delete entries
 				Restrict to channel for Mods to use command
 
 				deletes user's entries from database
