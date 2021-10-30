@@ -32,20 +32,21 @@
     {{$listNumber = ($args.Get 0) }}
 {{ end }}
 
-{{/* Setting up Shiny Leaderboard List */}}
-{{$listShundo := ""}}  {{$c := 0}}
-{{range (dbTopEntries "shundo" $listNumber 0)}}{{$c = add $c 1}}{{$h := toInt (dbGet .User.ID "shundo").Value}}
-      {{ if gt $h 0}}
-        {{ if eq $c 1}}
-          {{$listShundo = print $listShundo "🥇 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
-        {{ else if eq $c 2}}
-          {{$listShundo = print $listShundo "🥈 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
-        {{ else if eq $c 3}}
-          {{$listShundo = print $listShundo "🥉 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
-        {{ else }}
-          {{$listShundo = print $listShundo "🏅 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
-        {{ end }}
-      {{ end }}
+{{/* Setting up Shundo Leaderboard List */}}
+{{$data := dbTopEntries "shundo" $listNumber 0}}
+{{$listShundo := ""}}{{$c := 0}}
+{{range $data}}{{$c = add $c 1}}{{$h := toInt (.Value)}}
+  {{ if gt $h 0}}
+	   {{ if eq $c 1}}
+    	 {{- $listShundo = print $listShundo "🥇 " (or (getMember .User.ID).Nick .User.Username) "—" .Value "\n" -}}
+	   {{ else if eq $c 2}}
+		   {{- $listShundo = print $listShundo "🥈 " (or (getMember .User.ID).Nick .User.Username) "—" .Value "\n" -}}
+	   {{ else if eq $c 3}}
+		   {{- $listShundo = print $listShundo "🥉 " (or (getMember .User.ID).Nick .User.Username) "—" .Value "\n" -}}
+	   {{ else }}
+		   {{- $listShundo = print $listShundo "🏅 " (or (getMember .User.ID).Nick .User.Username) "—" .Value "\n" -}}
+  {{ end }}
+  {{ end }}
 {{end}}
 
 {{/* Printing Out Leaderboard Lists */}}

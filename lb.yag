@@ -29,49 +29,52 @@
 {{/* ------------ DO NOT ALTER CODE BELOW ------------ */}}
 
 {{/* Set up leaderboard entries */}}
-{{$listHundo := ""}}  {{$c := 0}}
-{{range (dbTopEntries "hundo" 10 0)}}{{$c = add $c 1}}{{$h := toInt (dbGet .User.ID "hundo").Value}}
-    {{ if gt $h 0}}
-      {{ if eq $c 1}}
-        {{$listHundo = print $listHundo "🥇 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
-      {{ else if eq $c 2}}
-        {{$listHundo = print $listHundo "🥈 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
-      {{ else if eq $c 3}}
-        {{$listHundo = print $listHundo "🥉 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
-      {{ else }}
-        {{$listHundo = print $listHundo "🏅 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
-      {{ end }}
-    {{ end }}
-{{end}}
-
-{{$listShiny := ""}}  {{$c := 0}}
-{{range (dbTopEntries "shiny" 10 0)}}{{$c = add $c 1}}{{$h := toInt (dbGet .User.ID "shiny").Value}}
+{{$data := dbTopEntries "hundo" 10 0}}
+{{$listHundo := ""}}{{$c := 0}}
+{{range $data}}{{$c = add $c 1}}{{$h := toInt (.Value)}}
   {{ if gt $h 0}}
-    {{ if eq $c 1}}
-      {{$listShiny = print $listShiny "🥇 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
-    {{ else if eq $c 2}}
-      {{$listShiny = print $listShiny "🥈 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
-    {{ else if eq $c 3}}
-      {{$listShiny = print $listShiny "🥉 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
-    {{ else }}
-      {{$listShiny = print $listShiny "🏅 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
-    {{ end }}
-  {{ end }}
+	   {{ if eq $c 1}}
+    	 {{- $listHundo = print $listHundo "🥇 " (or (getMember .User.ID).Nick .User.Username) "—" .Value "\n" -}}
+	   {{ else if eq $c 2}}
+		   {{- $listHundo = print $listHundo "🥈 " (or (getMember .User.ID).Nick .User.Username) "—" .Value "\n" -}}
+	   {{ else if eq $c 3}}
+		   {{- $listHundo = print $listHundo "🥉 " (or (getMember .User.ID).Nick .User.Username) "—" .Value "\n" -}}
+	   {{ else }}
+		   {{- $listHundo = print $listHundo "🏅 " (or (getMember .User.ID).Nick .User.Username) "—" .Value "\n" -}}
+     {{end}}
+  {{end}}
 {{end}}
 
-{{$listShundo := ""}}  {{$c := 0}}
-{{range (dbTopEntries "shundo" 10 0)}}{{$c = add $c 1}}{{$h := toInt (dbGet .User.ID "shundo").Value}}
-    {{ if gt $h 0}}
-      {{ if eq $c 1}}
-        {{$listShundo = print $listShundo "🥇 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
-      {{ else if eq $c 2}}
-        {{$listShundo = print $listShundo "🥈 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
-      {{ else if eq $c 3}}
-        {{$listShundo = print $listShundo "🥉 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
-      {{ else }}
-        {{$listShundo = print $listShundo "🏅 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
-      {{ end }}
-    {{ end }}
+{{$data := dbTopEntries "shiny" 10 0}}
+{{$listShiny := ""}}{{$c := 0}}
+{{range $data}}{{$c = add $c 1}}{{$h := toInt (.Value)}}
+  {{ if gt $h 0}}
+	   {{ if eq $c 1}}
+    	 {{- $listShiny = print $listShiny "🥇 " (or (getMember .User.ID).Nick .User.Username) "—" .Value "\n" -}}
+	   {{ else if eq $c 2}}
+		   {{- $listShiny = print $listShiny "🥈 " (or (getMember .User.ID).Nick .User.Username) "—" .Value "\n" -}}
+	   {{ else if eq $c 3}}
+		   {{- $listShiny = print $listShiny "🥉 " (or (getMember .User.ID).Nick .User.Username) "—" .Value "\n" -}}
+	   {{ else }}
+		   {{- $listShiny = print $listShiny "🏅 " (or (getMember .User.ID).Nick .User.Username) "—" .Value "\n" -}}
+	   {{ end }}
+  {{end}}
+{{end}}
+
+{{$data := dbTopEntries "shundo" 10 0}}
+{{$listShundo := ""}}{{$c := 0}}
+{{range $data}}{{$c = add $c 1}}{{$h := toInt (.Value)}}
+  {{ if gt $h 0}}
+	   {{ if eq $c 1}}
+    	 {{- $listShundo = print $listShundo "🥇 " (or (getMember .User.ID).Nick .User.Username) "—" .Value "\n" -}}
+	   {{ else if eq $c 2}}
+		   {{- $listShundo = print $listShundo "🥈 " (or (getMember .User.ID).Nick .User.Username) "—" .Value "\n" -}}
+	   {{ else if eq $c 3}}
+		   {{- $listShundo = print $listShundo "🥉 " (or (getMember .User.ID).Nick .User.Username) "—" .Value "\n" -}}
+	   {{ else }}
+		   {{- $listShundo = print $listShundo "🏅 " (or (getMember .User.ID).Nick .User.Username) "—" .Value "\n" -}}
+  {{ end }}
+  {{ end }}
 {{end}}
 
 {{/* Create embed message */}}

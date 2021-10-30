@@ -34,20 +34,21 @@
   {{ end }}
 
 {{/* Setting up Leaderboard Lists */}}
-  {{$listHundo := ""}} {{$c := 0}}
-  {{range (dbTopEntries "hundo" $listNumber 0)}} {{$c = add $c 1}} {{$h := toInt (dbGet .User.ID "hundo").Value}}
-    {{ if gt $h 0}}
-      {{ if eq $c 1}}
-        {{$listHundo = print $listHundo "🥇 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
-      {{ else if eq $c 2}}
-        {{$listHundo = print $listHundo "🥈 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
-      {{ else if eq $c 3}}
-        {{$listHundo = print $listHundo "🥉 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
-      {{ else }}
-        {{$listHundo = print $listHundo "🏅 " (or (getMember .User.ID).Nick .User.Username) "—" $h "\n" }}
-      {{ end }}
-    {{ end }}
-  {{ end }}
+{{$data := dbTopEntries "hundo" $listNumber 0}}
+{{$listHundo := ""}}{{$c := 0}}
+{{range $data}}{{$c = add $c 1}}{{$h := toInt (.Value)}}
+  {{ if gt $h 0}}
+	   {{ if eq $c 1}}
+    	 {{- $listHundo = print $listHundo "🥇 " (or (getMember .User.ID).Nick .User.Username) "—" .Value "\n" -}}
+	   {{ else if eq $c 2}}
+		   {{- $listHundo = print $listHundo "🥈 " (or (getMember .User.ID).Nick .User.Username) "—" .Value "\n" -}}
+	   {{ else if eq $c 3}}
+		   {{- $listHundo = print $listHundo "🥉 " (or (getMember .User.ID).Nick .User.Username) "—" .Value "\n" -}}
+	   {{ else }}
+		   {{- $listHundo = print $listHundo "🏅 " (or (getMember .User.ID).Nick .User.Username) "—" .Value "\n" -}}
+     {{end}}
+  {{end}}
+{{end}}
 
 {{/* Printing Out Leaderboard Lists */}}
 {{/* Hundo Leaderboard */}}
