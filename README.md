@@ -1,4 +1,4 @@
-# YAG-Leaderboard
+# YAGPDB-Leaderboard
 This leaderboard is a series of custom commands for the [YAGPDB bot](https://yagpdb.xyz/). It was developed for the [Rocket Raiders Discord server](https://discord.gg/WsrJUcNETG), that hosts Pokémon GO remote raids across the world. We wanted to have a way to track and display when a host has members that receive hundo, shiny or shundo Pokémon, following a raid.
 
 ![YAG Leaderboard](https://i.imgur.com/AmL25m7.png)
