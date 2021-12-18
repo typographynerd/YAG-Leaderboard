@@ -37,6 +37,7 @@
 {{$listShiny := ""}}{{$c := 0}}
 {{range $data}}{{$c = add $c 1}}{{$h := toInt (.Value)}}
   {{ if gt $h 0}}
+  {{ if .User.Username }}
 	   {{ if eq $c 1}}
     	 {{- $listShiny = print $listShiny "🥇 " (or (getMember .User.ID).Nick .User.Username) "—" .Value "\n" -}}
 	   {{ else if eq $c 2}}
@@ -46,6 +47,7 @@
 	   {{ else }}
 		   {{- $listShiny = print $listShiny "🏅 " (or (getMember .User.ID).Nick .User.Username) "—" .Value "\n" -}}
 	   {{ end }}
+  {{end}}
   {{end}}
 {{end}}
 
