@@ -41,6 +41,7 @@
 
 {{/* Checking $type variable for correct command */}}
 {{ if eq $type "hundo"}}
+	{{addReactions ":white_check_mark:"}}
 	{{$v := dbIncr $userID $type -1}} {{/* increments data element by 1*/}}
 	{{$hundoCount := ((dbGet $userID "hundo").Value)}}
 	{{ $embed := cembed
@@ -51,6 +52,7 @@
 	 }}
 	{{ sendMessage $HOFchannel $embed }}
 {{ else if eq $type "shiny"}}
+	{{addReactions ":white_check_mark:"}}
 	{{$v := dbIncr $userID $type -1}} {{/* increments data element by 1*/}}
 	{{$shinyCount := ((dbGet $userID "shiny").Value)}}
 	{{ $embed := cembed
@@ -61,6 +63,7 @@
 	 }}
 	{{ sendMessage $HOFchannel $embed }}
 {{ else if eq $type "shundo"}}
+	{{addReactions ":white_check_mark:"}}
 	{{$v := dbIncr $userID $type -1}} {{/* increments data element by 1*/}}
 	{{$shundoCount := ((dbGet $userID "shundo").Value)}}
 	{{ $embed := cembed
@@ -72,6 +75,7 @@
 	{{ sendMessage $HOFchannel $embed }}
 
 {{ else }}
+	{{addReactions "❌"}}
 	{{ $embed := cembed
 	     "title" "Error Detected: invalid option."
        "description" "The options are:  \n- hundo \n- shiny \n- shundo"
