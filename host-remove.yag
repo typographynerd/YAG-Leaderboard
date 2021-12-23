@@ -3,21 +3,17 @@
 				Trigger: host-remove
 				Trigger Type: Command (mention/cmd prefix)
 
-				Require Roles: roles who will add entries to leaderboard
+				Require Roles: Bot, RR Mod, RR Leader
 
-				decreases total by 1 for username
+				decreases total by username
 
 				!host-remove <type> <@username or userID>
 					1st argument: hundo/shiny/shundo
 					2nd argument: username/userID
 
-				Settings: set hall of fame channel, where confirmation messages are sent
+				Settings: limit to channels where you want access to edits
 */}}
 
-{{/* 	Hall of Fame Channel ID (where confirmation message is sent)
-      set this ID to the channel where you want confirmation messages sent */}}
-
-			{{ $HOFchannel := 879030511752855570 }}
 
 {{/* Set up thumbnail images for confirmation messages*/}}
       {{ $hundoThumbnail := "https://cdn.discordapp.com/emojis/749800513297449021.png?v=1" }}
@@ -41,38 +37,40 @@
 
 {{/* Checking $type variable for correct command */}}
 {{ if eq $type "hundo"}}
-	{{addReactions ":white_check_mark:"}}
+	{{addReactions ":hostCheck:896481862455812157"}}
 	{{$v := dbIncr $userID $type -1}} {{/* increments data element by 1*/}}
 	{{$hundoCount := ((dbGet $userID "hundo").Value)}}
 	{{ $embed := cembed
-	     "title" "Another Hundo Hosted"
-       "description" (println $mention "hosted a raid here and gave out a Hundo!\n Total Hundos hosted to date is" $hundoCount)
+	     "title" "Hundo Count Adjusted"
+       "description" (println "The Hundo count for" $mention "has been adjusted.\n Total Hundos hosted to date is now" $hundoCount)
        "thumbnail" (sdict "url" $hundoThumbnail )
 	      "color" 4645612
 	 }}
-	{{ sendMessage $HOFchannel $embed }}
+	{{ sendMessage nil $embed }}
+
 {{ else if eq $type "shiny"}}
-	{{addReactions ":white_check_mark:"}}
-	{{$v := dbIncr $userID $type -1}} {{/* increments data element by 1*/}}
+	{{addReactions ":hostCheck:896481862455812157"}}
+	{{$v := dbIncr $userID $type -1}} {{/* decreases data element by 1*/}}
 	{{$shinyCount := ((dbGet $userID "shiny").Value)}}
 	{{ $embed := cembed
-	     "title" "Another Shiny Hosted"
-       "description" (println $mention "hosted a raid here and gave out a Shiny!\n Total Shinies hosted to date is" $shinyCount)
+	     "title" "Shiny Count Adjusted"
+       "description" (println "The Shiny count for" $mention "has been adjusted.\n Total Shinies hosted to date is now" $shinyCount)
        "thumbnail" (sdict "url" $shinyThumbnail )
 	     "color" 4645612
 	 }}
-	{{ sendMessage $HOFchannel $embed }}
+	{{ sendMessage nil $embed }}
+
 {{ else if eq $type "shundo"}}
-	{{addReactions ":white_check_mark:"}}
-	{{$v := dbIncr $userID $type -1}} {{/* increments data element by 1*/}}
+	{{addReactions ":hostCheck:896481862455812157"}}
+	{{$v := dbIncr $userID $type -1}} {{/* decreases data element by 1*/}}
 	{{$shundoCount := ((dbGet $userID "shundo").Value)}}
 	{{ $embed := cembed
-	     "title" "Another Shundo Hosted"
-       "description" (println $mention "hosted a raid here and gave out a Shundo!\n Total Shundos hosted to date is" $shundoCount)
+	     "title" "Shundo Count Adjusted"
+       "description" (println "The Shundo count for" $mention "has been adjusted.\n Total Shundos hosted to date is now" $shundoCount)
        "thumbnail" (sdict "url" $shundoThumbnail )
 	     "color" 4645612
 	 }}
-	{{ sendMessage $HOFchannel $embed }}
+	{{ sendMessage nil $embed }}
 
 {{ else }}
 	{{addReactions "❌"}}
